@@ -8,7 +8,7 @@
    * Written By: Tom Mullins
    * Version: 0.85
    * Date Created:  10/13/17
-   * Date Modified: 05/22/21
+   * Date Modified: 05/29/21
 """
 """
    * Changelog:
@@ -142,20 +142,20 @@ class App(QMainWindow):
 
 
         """
-            A function for updating the app, to be added to main menu.
-            Added in V0.90 Beta.
+            The functions for the Update options in the settings menu. Added in V0.90 Beta
         """
+        def stable():
+            themeConfig.set('Updates', 'key1', 'Stable')
 
-        def update_program(self):
-            # Running terminal commands that will run an update shell script that mimics the
-            # Installation script.
-            os.system('rm -rf /home/$USER/Downloads/AstroNinja-Alpha')
-            os.system('git clone https://github.com/shiroininjaTech/AstroNinja-Alpha.git /home/$USER/Downloads/AstroNinja-Alpha')
-            os.system('chmod +x /home/$USER/Downloads/AstroNinja-Alpha/update.sh')
-            os.system('x-terminal-emulator -e /home/$USER/Downloads/AstroNinja-Alpha/update.sh') # will open a terminal for the user can enter their password
+            with open('config.ini', 'w') as f:
+                themeConfig.write(f)
 
-            # Next we'll restart the app with it's changes.
-            restart_program()
+        def unstable():
+            themeConfig.set('Updates', 'key1', 'Unstable')
+
+            with open('config.ini', 'w') as f:
+                themeConfig.write(f)
+
 
         """
             The functions for the Theme menu items
@@ -249,7 +249,7 @@ class App(QMainWindow):
         # initialize
         # Checking if the config file is present, and making one if it isnt. This prevents the configuration from being over written.
 
-        global sortingSelected, HubblesortingSelected
+        global sortingSelected, HubblesortingSelected, versionSelected
 
         if not os.path.isfile("config.ini"):
             themeConfig = ConfigParser()
@@ -266,6 +266,11 @@ class App(QMainWindow):
             themeConfig.set('hubbleSorting', 'key1', 'Newest')
             HubblesortingSelected = themeConfig.get('hubbleSorting', 'key1')
 
+            # Adding a section in the config.ini for storing update options.
+            themeConfig.add_section('Updates')
+            themeConfig.set('Updates', 'key1', 'Stable')
+            versionSelected = themeConfig.get('Updates', 'key1')
+
             with open('config.ini', 'w') as f:
                 themeConfig.write(f)
         elif os.path.isfile("config.ini"):
@@ -277,6 +282,33 @@ class App(QMainWindow):
             sortingSelected = themeConfig.get('articleSorting', 'key1')
             # Getting the sorting setting for hubble images last set by the user.
             HubblesortingSelected = themeConfig.get('hubbleSorting', 'key1')
+            # Getting the Update option selected by the user.
+            versionSelected = themeConfig.get('Updates', 'key1')
+
+        #===============================================================================================
+            #A function for updating the app, to be added to main menu.
+            #Added in V0.90 Beta.
+        #==============================================================================================
+
+        def update_program(self):
+            global versionSelected
+
+            # Running terminal commands that will run an update shell script that mimics the
+            # Installation script.
+            if versionSelected == "Stable":
+                os.system('rm -rf /home/$USER/Downloads/AstroNinja-Stable')
+                os.system('git clone https://github.com/shiroininjaTech/AstroNinja-Stable.git /home/$USER/Downloads/AstroNinja-Stable')
+                os.system('chmod +x /home/$USER/Downloads/AstroNinja-Stable/update.sh')
+                os.system('x-terminal-emulator -e /home/$USER/Downloads/AstroNinja-Stable/update.sh') # will open a terminal for the user can enter their password
+
+            elif versionSelected == "Unstable":
+                os.system('rm -rf /home/$USER/Downloads/AstroNinja-Unstable')
+                os.system('git clone https://github.com/shiroininjaTech/AstroNinja-Unstable.git /home/$USER/Downloads/AstroNinja-Unstable')
+                os.system('chmod +x /home/$USER/Downloads/AstroNinja-Unstable/updateUnstable.sh')
+                os.system('x-terminal-emulator -e /home/$USER/Downloads/AstroNinja-Unstable/updateUnstable.sh') # will open a terminal for the user can enter their password
+
+            # Next we'll restart the app with it's changes.
+            restart_program()
 
         #================================================================================================
         # Running the Scrapy spiders that retreives data for the backend modules.
@@ -1306,6 +1338,9 @@ class App(QMainWindow):
         oldestAct = buildMenuItemAction(iconList[0], toggler, "Sort News Articles by Oldest Date", "&Oldest", oldest)
         newesthubAct = buildMenuItemAction(iconList[0], toggler, "Sort Hubble Images by Newest", "&Newest", newestHubble)
         oldesthubAct = buildMenuItemAction(iconList[0], toggler, "Sort Hubble Images by Oldest Date", "&Oldest", oldestHubble)
+        stableAct = buildMenuItemAction(iconList[0], toggler, "Get Safer Updates", "&Stable Repository", stable)
+        unstableAct = buildMenuItemAction(iconList[0], toggler, "Get the latest Updates", "&Unstable Repository", unstable)
+
         # Adding a menubar.
         menubar = self.menuBar()
 
@@ -1340,6 +1375,11 @@ class App(QMainWindow):
         hubbleMenu.addAction(newesthubAct)
         hubbleMenu.addAction(oldesthubAct)
 
+        # Adding a submenu to the Settings Menu to allow users to select how they want their updates.
+        updateMenu = settingsMenu.addMenu('&Update Sources')
+        updateMenu.addAction(stableAct)
+        updateMenu.addAction(unstableAct)
+                
         self.statusBar()
         self.showMaximized()
         #self.show()

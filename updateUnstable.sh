@@ -15,4 +15,4 @@ python3 -m pip install matplotlib lxml scrapy
 rm -rf /home/$USER/.AstroNinja
 mkdir /home/$USER/.AstroNinja
 
-cp -r /home/$USER/Downloads/AstroNinja-Stable/* /home/$USER/.AstroNinja
+cp -r /home/$USER/Downloads/AstroNinja-Unstable/* /home/$USER/.AstroNinja
