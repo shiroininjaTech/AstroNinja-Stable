@@ -8,7 +8,7 @@
    * Written By: Tom Mullins
    * Version: 0.85
    * Date Created:  10/13/17
-   * Date Modified: 05/29/21
+   * Date Modified: 07/01/21
 """
 """
    * Changelog:
@@ -141,21 +141,6 @@ class App(QMainWindow):
             os.execl(python, python, * sys.argv)
 
 
-        """
-            The functions for the Update options in the settings menu. Added in V0.90 Beta
-        """
-        def stable():
-            themeConfig.set('Updates', 'key1', 'Stable')
-
-            with open('config.ini', 'w') as f:
-                themeConfig.write(f)
-
-        def unstable():
-            themeConfig.set('Updates', 'key1', 'Unstable')
-
-            with open('config.ini', 'w') as f:
-                themeConfig.write(f)
-
 
         """
             The functions for the Theme menu items
@@ -163,21 +148,21 @@ class App(QMainWindow):
         def Marine():
             themeConfig.set('theme', 'key1', 'marine')
 
-            with open('config.ini', 'w') as f:
+            with open(os.path.expanduser("~/.AstroNinja/config.ini"), 'w') as f:
                 themeConfig.write(f)
             restart_program()
 
         def Spacex():
             themeConfig.set('theme', 'key1', 'spaceX')
 
-            with open('config.ini', 'w') as f:
+            with open(os.path.expanduser("~/.AstroNinja/config.ini"), 'w') as f:
                 themeConfig.write(f)
             restart_program()
 
         def broco():
             themeConfig.set('theme', 'key1', 'broco')
 
-            with open('config.ini', 'w') as f:
+            with open(os.path.expanduser("~/.AstroNinja/config.ini"), 'w') as f:
                 themeConfig.write(f)
             restart_program()
 
@@ -190,7 +175,7 @@ class App(QMainWindow):
         def newest():
             themeConfig.set('articleSorting', 'key1', 'Newest')
 
-            with open('config.ini', 'w') as f:
+            with open(os.path.expanduser("~/.AstroNinja/config.ini"), 'w') as f:
                 themeConfig.write(f)
             restart_program()
 
@@ -198,7 +183,7 @@ class App(QMainWindow):
         def oldest():
             themeConfig.set('articleSorting', 'key1', 'Oldest')
 
-            with open('config.ini', 'w') as f:
+            with open(os.path.expanduser("~/.AstroNinja/config.ini"), 'w') as f:
                 themeConfig.write(f)
             restart_program()
 
@@ -211,7 +196,7 @@ class App(QMainWindow):
         def newestHubble():
             themeConfig.set('hubbleSorting', 'key1', 'Newest')
 
-            with open('config.ini', 'w') as f:
+            with open(os.path.expanduser("~/.AstroNinja/config.ini"), 'w') as f:
                 themeConfig.write(f)
             restart_program()
 
@@ -219,7 +204,7 @@ class App(QMainWindow):
         def oldestHubble():
             themeConfig.set('hubbleSorting', 'key1', 'Oldest')
 
-            with open('config.ini', 'w') as f:
+            with open(os.path.expanduser("~/.AstroNinja/config.ini"), 'w') as f:
                 themeConfig.write(f)
             restart_program()
 
@@ -249,11 +234,11 @@ class App(QMainWindow):
         # initialize
         # Checking if the config file is present, and making one if it isnt. This prevents the configuration from being over written.
 
-        global sortingSelected, HubblesortingSelected, versionSelected
+        global sortingSelected, HubblesortingSelected, versionSelected, themeConfig
 
-        if not os.path.isfile("config.ini"):
+        if not os.path.isfile(os.path.expanduser("~/.AstroNinja/config.ini")):
             themeConfig = ConfigParser()
-            themeConfig.read('config.ini')
+            themeConfig.read(os.path.expanduser("~/.AstroNinja/config.ini"))
             themeConfig.add_section('theme')
             themeConfig.set('theme', 'key1', 'spaceX')
             themeSelected = themeConfig.get('theme', 'key1')
@@ -271,11 +256,11 @@ class App(QMainWindow):
             themeConfig.set('Updates', 'key1', 'Stable')
             versionSelected = themeConfig.get('Updates', 'key1')
 
-            with open('config.ini', 'w') as f:
+            with open(os.path.expanduser("~/.AstroNinja/config.ini"), 'w') as f:
                 themeConfig.write(f)
-        elif os.path.isfile("config.ini"):
+        elif os.path.isfile(os.path.expanduser("~/.AstroNinja/config.ini")):
             themeConfig = ConfigParser()
-            themeConfig.read("config.ini")
+            themeConfig.read(os.path.expanduser("~/.AstroNinja/config.ini"))
             themeSelected = themeConfig.get('theme', 'key1')
             # Getting the sorting setting last set by the user.
             #global sortingSelected
@@ -284,6 +269,45 @@ class App(QMainWindow):
             HubblesortingSelected = themeConfig.get('hubbleSorting', 'key1')
             # Getting the Update option selected by the user.
             versionSelected = themeConfig.get('Updates', 'key1')
+
+
+
+        """
+            The functions for the Update options in the settings menu. Added in V0.90 Beta
+        """
+        # initializing the variable the version selected will be saved to.
+        #versionSelected = ""
+
+        def stable():
+            global versionSelected, themeConfig
+            themeConfig.set('Updates', 'key1', 'Stable')
+
+            with open(os.path.expanduser("~/.AstroNinja/config.ini"), 'w') as f:
+                themeConfig.write(f)
+
+            # An attempt to get the app to recognize that the settings has changed.
+            themeConfig = ConfigParser()
+            themeConfig.read(os.path.expanduser("~/.AstroNinja/config.ini"))
+
+            # Getting the Update option selected by the user.
+            versionSelected = themeConfig.get('Updates', 'key1')
+
+        def unstable():
+            global versionSelected, themeConfig
+
+            themeConfig.set('Updates', 'key1', 'Unstable')
+
+            with open(os.path.expanduser("~/.AstroNinja/config.ini"), 'w') as f:
+                themeConfig.write(f)
+
+            # An attempt to get the app to recognize that the settings has changed.
+            themeConfig = ConfigParser()
+            themeConfig.read(os.path.expanduser("~/.AstroNinja/config.ini"))
+
+            # Getting the Update option selected by the user.
+            versionSelected = themeConfig.get('Updates', 'key1')
+
+
 
         #===============================================================================================
             #A function for updating the app, to be added to main menu.
@@ -947,6 +971,11 @@ class App(QMainWindow):
                     head, sep, tail = picUrl.partition('.png')
                     picUrl = head+sep
 
+                elif '.jpeg' in picUrl:
+                    head, sep, tail = picUrl.partition('.jpeg')
+                    picUrl = head+sep
+
+
 
                 # FIXED IN VERSION 0.85: fixes inability to load urls that contain
                 # non-unicode characters by using the parse module in the urllib library.
@@ -971,7 +1000,6 @@ class App(QMainWindow):
                     picUrl = list(urllib.parse.urlsplit(picUrl))
                     picUrl[2] = urllib.parse.quote(picUrl[2])
                     picUrl = urllib.parse.urlunsplit(picUrl)
-
 
 
                     response = urllib.request.urlopen(picUrl)
@@ -1379,7 +1407,7 @@ class App(QMainWindow):
         updateMenu = settingsMenu.addMenu('&Update Sources')
         updateMenu.addAction(stableAct)
         updateMenu.addAction(unstableAct)
-                
+
         self.statusBar()
         self.showMaximized()
         #self.show()
