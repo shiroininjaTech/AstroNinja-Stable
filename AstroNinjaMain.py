@@ -8,7 +8,7 @@
    * Written By: Tom Mullins
    * Version: 0.85
    * Date Created:  10/13/17
-   * Date Modified: 07/01/21
+   * Date Modified: 08/22/21
 """
 """
    * Changelog:
@@ -907,7 +907,7 @@ class App(QMainWindow):
         self.scheduleTab.setLayout(self.scheduleTab.layout)
 
         #============================================================================================================================
-        # The News tab, showing news articles scraped by xNews.py
+        # The News tab, showing news articles scraped by the two news spiders
         #============================================================================================================================
 
         self.spacexTab.layout =  QGridLayout()
@@ -926,8 +926,8 @@ class App(QMainWindow):
         def newsListBuilder(a, b, c, d, e):
 
             # Removing unwanted articles from space.com
-            naughtyArticles = ['Pictures from Space!', 'The top space stories of the week!', 'Black Friday', 'Best telescopes', 'Cyber Monday']                        # The list of articles to look for
-            if naughtyArticles[0] in xNewsV85.listedTitle[a] or naughtyArticles[1] in xNewsV85.listedTitle[a]  or naughtyArticles[2] in xNewsV85.listedTitle[a] or naughtyArticles[3] in xNewsV85.listedTitle[a] or naughtyArticles[4] in xNewsV85.listedTitle[a]:      # if the title matches one of naughtyArticles
+            naughtyArticles = ['Pictures from Space!', 'The top space stories of the week!', 'Black Friday', 'Best telescopes', 'Cyber Monday', 'deals and gifts']                        # The list of articles to look for
+            if naughtyArticles[0] in xNewsV85.listedTitle[a] or naughtyArticles[1] in xNewsV85.listedTitle[a]  or naughtyArticles[2] in xNewsV85.listedTitle[a] or naughtyArticles[3] in xNewsV85.listedTitle[a] or naughtyArticles[4] in xNewsV85.listedTitle[a] or naughtyArticles[5] in xNewsV85.listedTitle[a]:      # if the title matches one of naughtyArticles
                 # Ends and moves on to the next article if found.
                 return
 
@@ -996,6 +996,21 @@ class App(QMainWindow):
                     # Adding verticle spacing
                     vert_Spacer(scroll.layout, 250, 250)
 
+                elif picUrl == "/media/img/missing-image.svg":
+
+                    horizSpacer = QSpacerItem(50, 50, QSizePolicy.Maximum, QSizePolicy.Expanding)
+                    frameLayout.addItem(horizSpacer, 1, 2)
+                    frameLayout.addItem(horizSpacer, 2, 2)
+
+                    # Setting the label for the date of the article.
+                    label_maker(dateVar, QtCore.Qt.AlignLeft, basicFont, 900, frameLayout, 3, 2)
+
+                    # setting the label for the body of the article
+                    label_maker(bodyVar, QtCore.Qt.AlignLeft, basicFont, 900, frameLayout, 4, 2)
+
+
+                    # Adding verticle spacing
+                    vert_Spacer(scroll.layout, 250, 250)
                 else:
                     picUrl = list(urllib.parse.urlsplit(picUrl))
                     picUrl[2] = urllib.parse.quote(picUrl[2])
