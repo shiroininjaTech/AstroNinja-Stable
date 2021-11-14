@@ -8,7 +8,7 @@
    * Written By: Tom Mullins
    * Version: 0.85
    * Date Created:  10/13/17
-   * Date Modified: 10/22/21
+   * Date Modified: 11/13/21
 """
 """
    * Changelog:
@@ -471,13 +471,13 @@ class App(QMainWindow):
         # (xCord and yCord) are the coordinates the label is to be placed at
         # (layout) is the object the label is to be placed in.
         def genLabel(stringVar,xCord, yCord, layout):
-
+            # Creating the black screen explanation label
             self.label = QLabel(stringVar, self)
             self.label.adjustSize()
             self.label.setWordWrap(True)
             self.label.setMaximumWidth(450)
             self.label.setFont(basicFont)
-            layout.addWidget(self.label, xCord, yCord)
+            frameLayout.addWidget(self.label, xCord, yCord)
 
         # Adding the most recent Label
         def get_recent():
@@ -1183,8 +1183,8 @@ class App(QMainWindow):
         frameBuilder(frameLayout, 2, 1, 450, True)              # Creating the inner frame
         self.frame.setLineWidth(5)
 
-        headerMessage = "HDEV Camera"
-        technicalDescrip = "\tActivated on April 30, 2014, the primary purpose of the High Definition Earth-Viewing System (HDEV) is to monitor the rate at which HD video image quality degrades when exposed to the harsh environment of space, mainly cosmic ray damage. Unfortunatly, the HDEV experiment reached End of Life in 2019, but rejoice space fans! Live views of our beautiful home can be enjoyed through another camera mounted elsewhere on the ISS.\n\tThis new camera presents a new view in which one may occasionally spot a solar panel.\n"
+        headerMessage = "HDEV Camera Description"
+        technicalDescrip = "\tActivated on April 30, 2014, the primary purpose of the High Definition Earth-Viewing System (HDEV) is to monitor the rate at which HD video image quality degrades when exposed to the harsh environment of space, mainly cosmic ray damage. Unfortunatly, the HDEV experiment reached End of Life in 2019, but rejoice space fans! The project maintainers continue to keep previously recorded video available.\n\tThe cameras cycle from one to the next, providing a view looking forward, one straight down on our gorgeous home, and 2 looking back for that rear-facing perspective. You may even spot a docked vehicle or two!\n"
         blackHead = "Why is the window black?\n"
         descrip = "\tDon't fear! The ISS is currently passing over the night side of the Earth. The view usually brightens again a few minutes, and sometimes we're treated with a sunrise!"
         powerHead = "What is this screen?\n"
@@ -1254,7 +1254,7 @@ class App(QMainWindow):
 
         frameLayout.addWidget(self.expeditionLogoLarge, 0, 1)
 
-
+        scrollBuilder(frameLayout, 2, 1)
 
         vert_Spacer(scroll.layout, 150, 50)         # spacer that goes around profiles.
 
@@ -1264,34 +1264,18 @@ class App(QMainWindow):
         # Takes iteratorX as a counter for facilitating the moving on to a new column as needed in the layout.
         def profileBuilder(crewVar, iteratorY):
 
-
             # Building the outer frame
 
             frameBuilder(scroll.layout, iteratorY, 1, 200, True)
             #self.frame.setMaximumWidth(900)
-
-            # creating the scroll area the bios will be kept in.
-            # To-Do: find a better naming scheme and see if I can't just use the scrollBuilder function.
-            scroll2 = QScrollArea(self)
-
-            frameLayout.addWidget(scroll2, 0, 2)
-
-            scroll2.setWidgetResizable(True)
-            #scroll2.setMinimumWidth(700)
-            scrollContent2 = QWidget(scroll2)
-            scroll2.layout2 = QGridLayout(scrollContent2)
-            scrollContent2.setLayout(scroll2.layout2)
-
-            scroll2.setWidget(scrollContent2)
-
             #building the label for the bio
-            smallItems = "Place of Birth: {}\n\nNationality: {} {}\n {}".format(issPortal.crewLocation[crewVar], issPortal.crewNat[crewVar], issPortal.shortBio[crewVar], issPortal.shortBio2[crewVar])
-            genLabel(smallItems, 0, 0, scroll2.layout2)
+            smallItems = "Place of Birth: {}\n\nNationality: {} {}".format(issPortal.crewLocation[crewVar], issPortal.crewNat[crewVar], issPortal.shortBio[crewVar])
+            genLabel(smallItems, 1, 1, frameLayout)
             self.label.setMargin(0)
             self.label.setMinimumWidth(700)
-            #genLabel(issPortal.shortBio2[crewVar], 1, 0, frameLayout)
-            #self.label.setMargin(0)
-            #self.label.setMinimumWidth(700)
+            genLabel(issPortal.shortBio2[crewVar], 2, 1, frameLayout)
+            self.label.setMargin(0)
+            self.label.setMinimumWidth(700)
 
             # Adding spacers to the layout
             horizSpacer = QSpacerItem(50, 50, QSizePolicy.Maximum, QSizePolicy.Expanding)
