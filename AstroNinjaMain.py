@@ -477,7 +477,7 @@ class App(QMainWindow):
             self.label.setWordWrap(True)
             self.label.setMaximumWidth(450)
             self.label.setFont(basicFont)
-            frameLayout.addWidget(self.label, xCord, yCord)
+            layout.addWidget(self.label, xCord, yCord)
 
         # Adding the most recent Label
         def get_recent():
