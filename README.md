@@ -4,7 +4,7 @@ AstroNinja is an all-around tracker of the space industry. It has launch schedul
 
 ## Installation
 
-### Debian-based Distros
+### Debian-based Distros And Fedora
 Linux Mint/Ubuntu/Pop!OS
 
 - Open the terminal and clone this repository to your directory of choice:
