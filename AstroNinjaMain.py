@@ -8,7 +8,7 @@
    * Written By: Tom Mullins
    * Version: 0.85
    * Date Created:  10/13/17
-   * Date Modified: 01/01/22
+   * Date Modified: 01/30/22
 """
 """
    * Changelog:
@@ -253,7 +253,7 @@ class App(QMainWindow):
 
             # Adding a section in the config.ini for storing update options.
             themeConfig.add_section('Updates')
-            themeConfig.set('Updates', 'key1', 'Stable')
+            themeConfig.set('Updates', 'key1', 'Unstable')
             versionSelected = themeConfig.get('Updates', 'key1')
 
             with open(os.path.expanduser("~/.AstroNinja/config.ini"), 'w') as f:
@@ -332,7 +332,7 @@ class App(QMainWindow):
                 os.system('x-terminal-emulator -e /home/$USER/Downloads/AstroNinja-Unstable/updateUnstable.sh') # will open a terminal for the user can enter their password
 
             # Next we'll restart the app with it's changes.
-            restart_program()
+            #restart_program()
 
         #================================================================================================
         # Running the Scrapy spiders that retreives data for the backend modules.
@@ -525,6 +525,8 @@ class App(QMainWindow):
                 nextLogo = os.path.expanduser("~/.AstroNinja/Images/Logos/northop.png")
             elif 'Virgin Orbit' in  x:
                 nextLogo = os.path.expanduser("~/.AstroNinja/Images/Logos/virginorbit.png")
+            elif 'Astra' in x:
+                nextLogo = os.path.expanduser("~/.AstroNinja/Images/Logos/astra.png")
             else:
                 nextLogo = ''
             return nextLogo
@@ -790,10 +792,10 @@ class App(QMainWindow):
         astroGraphV85.historian('2022')
 
         # The tallies
-        historyTallies = [astroGraphV85.spaceXCount, astroGraphV85.chinaCount, astroGraphV85.ulaCount, astroGraphV85.indiaCount, astroGraphV85.rocketCount, astroGraphV85.japaneseCount, astroGraphV85.arianeCount, astroGraphV85.russiaCount, astroGraphV85.northCount, astroGraphV85.blueOrigin, astroGraphV85.ilsCount]
+        historyTallies = [astroGraphV85.spaceXCount, astroGraphV85.chinaCount, astroGraphV85.ulaCount, astroGraphV85.indiaCount, astroGraphV85.rocketCount, astroGraphV85.japaneseCount, astroGraphV85.arianeCount, astroGraphV85.russiaCount, astroGraphV85.northCount, astroGraphV85.blueOrigin, astroGraphV85.virginCount]
 
         # The Organizations
-        orgs = ('SpaceX', 'China', 'ULA', 'India', 'Rocket\nLabs', 'Japan', 'Ariane\nSpace', 'Russia', 'Northrop', 'Blue\nOrigin', 'ILS')
+        orgs = ('SpaceX', 'China', 'ULA', 'India', 'Rocket\nLabs', 'Japan', 'Ariane\nSpace', 'Russia', 'Northrop', 'Blue\nOrigin', 'Virgin\nOrbit')
 
         graph_maker(historyTallies, 'Launch Totals', 'Total Launches For 2022 by Organization\n', orgs, scroll.layout, itemPosition, 1)
         itemPosition += 1
@@ -806,7 +808,7 @@ class App(QMainWindow):
         astroGraphV85.historian('2021')
 
         # The tallies
-        historyTallies = [astroGraphV85.spaceXCount, astroGraphV85.chinaCount, astroGraphV85.ulaCount, astroGraphV85.indiaCount, astroGraphV85.rocketCount, astroGraphV85.japaneseCount, astroGraphV85.arianeCount, astroGraphV85.russiaCount, astroGraphV85.northCount, astroGraphV85.blueOrigin, astroGraphV85.ilsCount]
+        historyTallies = [astroGraphV85.spaceXCount, astroGraphV85.chinaCount, astroGraphV85.ulaCount, astroGraphV85.indiaCount, astroGraphV85.rocketCount, astroGraphV85.japaneseCount, astroGraphV85.arianeCount, astroGraphV85.russiaCount, astroGraphV85.northCount, astroGraphV85.blueOrigin, astroGraphV85.virginCount]
 
         graph_maker(historyTallies, 'Launch Totals', 'Total Launches For 2021 by Organization\n', orgs, scroll.layout, itemPosition, 1)
 
@@ -1172,8 +1174,8 @@ class App(QMainWindow):
         frameBuilder(scroll.layout, 0, 1, 750, False)
         vert_Spacer(scroll.layout, 150, 50)
         frameLayout.addWidget(self.issView, 2, 0)
-        horizSpacer = QSpacerItem(20, 20, QSizePolicy.Maximum, QSizePolicy.Expanding)
-        frameLayout.addItem(horizSpacer, 3, 0)
+
+
 
 
         # building the header frame
@@ -1225,13 +1227,64 @@ class App(QMainWindow):
         #horizSpacer = QSpacerItem(20, 20, QSizePolicy.Maximum, QSizePolicy.Expanding)
         #frameLayout.addItem(horizSpacer, 3, 2)
 
+
+        """
+            Creating the ISS tracker section
+        """
+        frameBuilder(scroll.layout, 1, 1, 750, False)
+
+        verticalSpacer = QSpacerItem(100, 100, QSizePolicy.Maximum, QSizePolicy.Expanding)
+        frameLayout.addItem(verticalSpacer, 0, 0)
+        frameLayout.addItem(verticalSpacer, 0, 3)
+
+        # Adding an ISS Tracker as a Web object.
+        mapUrl = "https://isstracker.spaceflight.esa.int/"
+        trackerHTML = "<body padding='0px' style='background-color: #778899; max-height: 350; max-width: 625;'> <iframe width='100%' height='100%' allowtransparency='true' style='background: Darkslategray; position: fixed; top:0; left:0; bottom:0; right:0;' src='{}' frameborder='0' scrolling='no' allowfullscreen></iframe>".format(mapUrl)
+        web_wrapper(trackerHTML, 100, frameLayout, 0, 1, True)
+        self.webView.setMaximumWidth(630)
+        self.webView.setMaximumHeight(350)
+
+
+        # Building the "Fun facts" section
+        frameBuilder(frameLayout, 0, 2, 450, True)
+        self.frame.setLineWidth(5)
+
+        # The strings for the facts labels.
+        speed = "The International Space Station orbits the Earth every 90 minutes, travelling at 5 miles per second."
+        orbit = "The station orbits our planet 16 times a day."
+        altitude = "The ISS resides about 250 miles from Earth. On average, it takes about six hours to reach the station from Earth."
+        headerStr = "ISS Fun Facts"
+
+        #Building and placing the labels.
+        headerBuild(headerStr, 0, 0, frameLayout, 100)
+        label_maker(speed, QtCore.Qt.AlignLeft, basicFont, 450, frameLayout, 1, 0)
+        # Throwing in a divider
+        hDivider  = QFrame()
+        hDivider.setFrameShape(QFrame.HLine)
+        hDivider.setLineWidth(3)
+        frameLayout.addWidget(hDivider, 5, 0)
+
+        frameLayout.addWidget(hDivider, 2, 0)
+        label_maker(orbit, QtCore.Qt.AlignLeft, basicFont, 450, frameLayout, 3, 0)
+        # Throwing in a divider
+        hDivider  = QFrame()
+        hDivider.setFrameShape(QFrame.HLine)
+        hDivider.setLineWidth(3)
+        frameLayout.addWidget(hDivider, 5, 0)
+
+        frameLayout.addWidget(hDivider, 4, 0)
+        label_maker(altitude, QtCore.Qt.AlignLeft, basicFont, 450, frameLayout, 5, 0)
+
+
+
+
         """
             Building the current residents section
 
         """
         issPortal.rollCall()
 
-        frameBuilder(scroll.layout, 1, 1, 750, False )
+        frameBuilder(scroll.layout, 2, 1, 750, False )
         self.frame.setMaximumHeight(300)
         # the header
         crewHead = "Current Expedition Crew                                                         Expedition 66"
@@ -1302,6 +1355,8 @@ class App(QMainWindow):
             #self.frame.setAlignment(QtCore.Qt.AlignCenter)
             # building the image object for the portrait
             self.image = QLabel(self)
+
+            # Had to redo how image urls are loaded so I could ad a User Agent so that we comply with wikipedia's policies.
             headers = {}
             headers['User-Agent'] = "AstroNinjaBio (https://github.com/shiroininjaTech/AstroNinja-Stable; twmulli2513@gmail.com) scrapy"
             imageReq = urllib.request.Request(issPortal.crewImg[crewVar], headers = headers)
@@ -1335,7 +1390,7 @@ class App(QMainWindow):
         crewIt = 0
 
         # xIt is for iterating through x coordinates
-        xIt = 2
+        xIt = 3
 
         # The function that runs profileBuilder and iterates to the next crew profile.
         # takes the above iterator variables as arguments
