@@ -8,7 +8,7 @@
    * Written By: Tom Mullins
    * Version: 0.85
    * Date Created:  10/13/17
-   * Date Modified: 01/30/22
+   * Date Modified: 04/10/22
 """
 """
    * Changelog:
@@ -331,8 +331,8 @@ class App(QMainWindow):
                 os.system('chmod +x /home/$USER/Downloads/AstroNinja-Unstable/updateUnstable.sh')
                 os.system('x-terminal-emulator -e /home/$USER/Downloads/AstroNinja-Unstable/updateUnstable.sh') # will open a terminal for the user can enter their password
 
-            # Next we'll restart the app with it's changes.
-            #restart_program()
+            # Next we'll close the app.
+            sys.exit()
 
         #================================================================================================
         # Running the Scrapy spiders that retreives data for the backend modules.
@@ -1287,7 +1287,7 @@ class App(QMainWindow):
         frameBuilder(scroll.layout, 2, 1, 750, False )
         self.frame.setMaximumHeight(300)
         # the header
-        crewHead = "Current Expedition Crew                                                         Expedition 66"
+        crewHead = "Current Expedition Crew                                                         Expedition 67"
         #self.resLabel = QLabel("Current ISS Residents\n\nExpedition 62", self)
         headerBuild(crewHead, 1, 1, frameLayout, 70)
 
