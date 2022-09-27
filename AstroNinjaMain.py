@@ -1026,7 +1026,7 @@ class App(QMainWindow):
                     try:
                         response = urllib.request.urlopen(picUrl)
 
-                    except urllib.error.HTTPError as e:
+                    except AttributeError as e:
                         horizSpacer = QSpacerItem(50, 50, QSizePolicy.Maximum, QSizePolicy.Expanding)
                         frameLayout.addItem(horizSpacer, 1, 2)
                         frameLayout.addItem(horizSpacer, 2, 2)
@@ -1037,19 +1037,18 @@ class App(QMainWindow):
                         # setting the label for the body of the article
                         label_maker(bodyVar, QtCore.Qt.AlignLeft, basicFont, 900, frameLayout, 4, 2)
 
-                       
-                    except AttributeError as e:
-                        horizSpacer = QSpacerItem(50, 50, QSizePolicy.Maximum, QSizePol
-                         frameLayout.addItem(horizSpacer, 1, 2)
-                         frameLayout.addItem(horizSpacer, 2, 2)
-
-                         # Setting the label for the date of the article.
-                         label_maker(dateVar, QtCore.Qt.AlignLeft, basicFont, 900, frame
-
-                         # setting the label for the body of the article
-                         label_maker(bodyVar, QtCore.Qt.AlignLeft, basicFont, 900, frame
 
 
+                    except ValueError as e:
+                        horizSpacer = QSpacerItem(50, 50, QSizePolicy.Maximum, QSizePolicy.Expanding)
+                        frameLayout.addItem(horizSpacer, 1, 2)
+                        frameLayout.addItem(horizSpacer, 2, 2)
+
+                        # Setting the label for the date of the article.
+                        label_maker(dateVar, QtCore.Qt.AlignLeft, basicFont, 900, frameLayout, 3, 2)
+
+                        # setting the label for the body of the article
+                        label_maker(bodyVar, QtCore.Qt.AlignLeft, basicFont, 900, frameLayout, 4, 2)
 
                     except ValueError as e:
                         horizSpacer = QSpacerItem(50, 50, QSizePolicy.Maximum, QSizePol
