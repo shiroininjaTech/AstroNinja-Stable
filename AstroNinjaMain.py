@@ -1037,6 +1037,32 @@ class App(QMainWindow):
                         # setting the label for the body of the article
                         label_maker(bodyVar, QtCore.Qt.AlignLeft, basicFont, 900, frameLayout, 4, 2)
 
+                       
+                    except AttributeError as e:
+                        horizSpacer = QSpacerItem(50, 50, QSizePolicy.Maximum, QSizePol
+                         frameLayout.addItem(horizSpacer, 1, 2)
+                         frameLayout.addItem(horizSpacer, 2, 2)
+
+                         # Setting the label for the date of the article.
+                         label_maker(dateVar, QtCore.Qt.AlignLeft, basicFont, 900, frame
+
+                         # setting the label for the body of the article
+                         label_maker(bodyVar, QtCore.Qt.AlignLeft, basicFont, 900, frame
+
+
+
+                    except ValueError as e:
+                        horizSpacer = QSpacerItem(50, 50, QSizePolicy.Maximum, QSizePol
+                        frameLayout.addItem(horizSpacer, 1, 2)
+                        frameLayout.addItem(horizSpacer, 2, 2)
+
+                        # Setting the label for the date of the article.
+                        label_maker(dateVar, QtCore.Qt.AlignLeft, basicFont, 900, frame
+
+                        # setting the label for the body of the article
+                        label_maker(bodyVar, QtCore.Qt.AlignLeft, basicFont, 900, frame
+
+
                     else:
                         # TO-DO: Test if this is no longer necessary if unicode characters are fixed.
                         if '\u2014' not in xNewsV85.listedImg[d]:
