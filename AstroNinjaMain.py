@@ -963,26 +963,6 @@ class App(QMainWindow):
                 # Fixed in 0.90 Alpha, removed extra image url if there is one.
                 picUrl = xNewsV85.listedImg[d]
 
-                # Found an issue where the same thing happened with .png urls.
-                # This quick if-else catches both.
-                if '.jpg' in picUrl:
-
-                    head, sep, tail = picUrl.partition('.jpg')
-                    picUrl = head+sep
-
-                elif '.png' in picUrl:
-                    head, sep, tail = picUrl.partition('.png')
-                    picUrl = head+sep
-
-                elif '.jpeg' in picUrl:
-                    head, sep, tail = picUrl.partition('.jpeg')
-                    picUrl = head+sep
-
-                elif '.gif' in picUrl:
-                    head, sep, tail = picUrl.partition('.gif')
-                    picUrl = head+sep
-
-
                 # FIXED IN VERSION 0.85: fixes inability to load urls that contain
                 # non-unicode characters by using the parse module in the urllib library.
                 # Uses urllib.parse.quote to correctly quote/escape unicode characters
