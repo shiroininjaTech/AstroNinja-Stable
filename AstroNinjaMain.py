@@ -8,7 +8,7 @@
    * Written By: Tom Mullins
    * Version: 0.85
    * Date Created:  10/13/17
-   * Date Modified: 05/26/22
+   * Date Modified: 09/26/22
 """
 """
    * Changelog:
@@ -601,7 +601,7 @@ class App(QMainWindow):
             if max(tallies) == 0:
                     plt.yticks(np.arange(0, 2), color=fg_color)
             else:
-                plt.yticks(np.arange(0, max(tallies) + 2, 5.0), color=fg_color)
+                plt.yticks(np.arange(0, max(tallies) + 5, 5.0), color=fg_color)
 
             #plt.style.use(u'dark_background')
             ax.patch.set_facecolor(bg_color)
@@ -665,10 +665,6 @@ class App(QMainWindow):
         # Building the scrollbars
         firstScroll = scrollBuilder(self.welcomeTab.layout, 1, 1)
 
-        # Creating the Welcome header using headerBuild()
-        welcome = "Welcome To AstroNinja!   "
-        headerBuild(welcome, 0, 1, self.welcomeTab.layout, 50)
-
         # Adding a verticle spacer
         vert_Spacer(scroll.layout, 250, 250)
 
@@ -680,7 +676,7 @@ class App(QMainWindow):
         scroll.layout.addItem(horizSpacer, 4, 1)
         scroll.layout.addItem(horizSpacer, 6, 1)
         # Building the frame to put the next launch icon and description
-        frameBuilder(scroll.layout, 1, 1, 750, False)
+        frameBuilder(scroll.layout, 0, 1, 750, False)
         # Running the function that uses the backend module that scrapes the data needed
         # to display the next launch. Also builds the label object
         headerBuild("Next Launch\n", 0, 1, frameLayout, 50)
@@ -914,10 +910,19 @@ class App(QMainWindow):
 
         self.spacexTab.layout =  QGridLayout()
 
+        self.newstabs = QTabWidget()
+        self.commercialTab = QWidget()
+        self.scienceTab = QWidget()
+        self.newstabs.addTab(self.commercialTab, "Business")
+        self.newstabs.addTab(self.scienceTab, "Science")
+        self.commercialTab.layout = QGridLayout()
+        self.scienceTab.layout = QGridLayout()
+
+        self.spacexTab.layout.addWidget(self.newstabs, 0, 0)
         newsRun = xNewsV85.intestellar_News(sortingSelected)
 
         # Building the scroll bar for the schedule. scrollBuilder() added V.75
-        scrollBuilder(self.spacexTab.layout, 0, 0)
+        scrollBuilder(self.commercialTab.layout, 0, 0)
 
         # An function based on launch_scheduleBuild that builds out the list of articles in the GUI
         # a is the position of the item in titleList
@@ -928,8 +933,8 @@ class App(QMainWindow):
         def newsListBuilder(a, b, c, d, e):
 
             # Removing unwanted articles from space.com
-            naughtyArticles = ['Pictures from Space!', 'The top space stories of the week!', 'Black Friday', 'Best telescopes', 'Cyber Monday', 'deals and gifts']                        # The list of articles to look for
-            if naughtyArticles[0] in xNewsV85.listedTitle[a] or naughtyArticles[1] in xNewsV85.listedTitle[a]  or naughtyArticles[2] in xNewsV85.listedTitle[a] or naughtyArticles[3] in xNewsV85.listedTitle[a] or naughtyArticles[4] in xNewsV85.listedTitle[a] or naughtyArticles[5] in xNewsV85.listedTitle[a]:      # if the title matches one of naughtyArticles
+            naughtyArticles = ['Pictures from Space!', 'The top space stories of the week!', 'Black Friday', 'Best telescopes', 'Cyber Monday', 'deals and gifts', 'Best Drone Deals:', 'Best Cameras']                        # The list of articles to look for
+            if naughtyArticles[0] in xNewsV85.listedTitle[a] or naughtyArticles[1] in xNewsV85.listedTitle[a]  or naughtyArticles[2] in xNewsV85.listedTitle[a] or naughtyArticles[3] in xNewsV85.listedTitle[a] or naughtyArticles[4] in xNewsV85.listedTitle[a] or naughtyArticles[5] in xNewsV85.listedTitle[a] or naughtyArticles[6] in xNewsV85.listedTitle[a] or naughtyArticles[7] in xNewsV85.listedTitle[a]:      # if the title matches one of naughtyArticles
                 # Ends and moves on to the next article if found.
                 return
 
@@ -963,11 +968,39 @@ class App(QMainWindow):
                 # Fixed in 0.90 Alpha, removed extra image url if there is one.
                 picUrl = xNewsV85.listedImg[d]
 
-                # FIXED IN VERSION 0.85: fixes inability to load urls that contain
-                # non-unicode characters by using the parse module in the urllib library.
-                # Uses urllib.parse.quote to correctly quote/escape unicode characters
-                if len(picUrl) == 0:
+                picUrl = list(urllib.parse.urlsplit(picUrl))
+                picUrl[2] = urllib.parse.quote(picUrl[2])
+                picUrl = urllib.parse.urlunsplit(picUrl)
 
+                # A proper way to catch image url errors. checks for Http errors like 404 and Value errors.
+                try:
+                    response = urllib.request.urlopen(picUrl)
+
+                except urllib.error.HTTPError as e:
+                    horizSpacer = QSpacerItem(50, 50, QSizePolicy.Maximum, QSizePolicy.Expanding)
+                    frameLayout.addItem(horizSpacer, 1, 2)
+                    frameLayout.addItem(horizSpacer, 2, 2)
+
+                    # Setting the label for the date of the article.
+                    label_maker(dateVar, QtCore.Qt.AlignLeft, basicFont, 900, frameLayout, 3, 2)
+
+                    # setting the label for the body of the article
+                    label_maker(bodyVar, QtCore.Qt.AlignLeft, basicFont, 900, frameLayout, 4, 2)
+
+                except AttributeError as e:
+                    horizSpacer = QSpacerItem(50, 50, QSizePolicy.Maximum, QSizePolicy.Expanding)
+                    frameLayout.addItem(horizSpacer, 1, 2)
+                    frameLayout.addItem(horizSpacer, 2, 2)
+
+                    # Setting the label for the date of the article.
+                    label_maker(dateVar, QtCore.Qt.AlignLeft, basicFont, 900, frameLayout, 3, 2)
+
+                    # setting the label for the body of the article
+                    label_maker(bodyVar, QtCore.Qt.AlignLeft, basicFont, 900, frameLayout, 4, 2)
+
+ 
+
+                except ValueError as e:
                     horizSpacer = QSpacerItem(50, 50, QSizePolicy.Maximum, QSizePolicy.Expanding)
                     frameLayout.addItem(horizSpacer, 1, 2)
                     frameLayout.addItem(horizSpacer, 2, 2)
@@ -979,87 +1012,33 @@ class App(QMainWindow):
                     label_maker(bodyVar, QtCore.Qt.AlignLeft, basicFont, 900, frameLayout, 4, 2)
 
 
-                    # Adding verticle spacing
-                    vert_Spacer(scroll.layout, 250, 250)
 
-                elif "missing-image.svg" in picUrl:
-
-                    horizSpacer = QSpacerItem(50, 50, QSizePolicy.Maximum, QSizePolicy.Expanding)
-                    frameLayout.addItem(horizSpacer, 1, 2)
-                    frameLayout.addItem(horizSpacer, 2, 2)
-
-                    # Setting the label for the date of the article.
-                    label_maker(dateVar, QtCore.Qt.AlignLeft, basicFont, 900, frameLayout, 3, 2)
-
-                    # setting the label for the body of the article
-                    label_maker(bodyVar, QtCore.Qt.AlignLeft, basicFont, 900, frameLayout, 4, 2)
-
-
-                    # Adding verticle spacing
-                    vert_Spacer(scroll.layout, 250, 250)
                 else:
-                    picUrl = list(urllib.parse.urlsplit(picUrl))
-                    picUrl[2] = urllib.parse.quote(picUrl[2])
-                    picUrl = urllib.parse.urlunsplit(picUrl)
+                    data = response.read()
 
-                    # A proper way to catch image url errors. checks for Http errors like 404
-                    try:
-                        response = urllib.request.urlopen(picUrl)
+                    artmap = QPixmap()
+                    artmap.loadFromData(data)
+                    artmap = QPixmap(artmap).scaled(700, 900, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
+                    self.image.setPixmap(artmap)
+                    self.image.setAlignment(QtCore.Qt.AlignCenter)
+                    self.image.adjustSize()
+                    frameLayout.addWidget(self.image, 2, 2)
+                    # Adding a space to further seperate the article image and body
+                    horizSpacer = QSpacerItem(50, 50, QSizePolicy.Maximum, QSizePolicy.Expanding)
+                    frameLayout.addItem(horizSpacer, 1, 2)
+                    frameLayout.addItem(horizSpacer, 3, 2)
 
-                    except AttributeError as e:
-                        horizSpacer = QSpacerItem(50, 50, QSizePolicy.Maximum, QSizePolicy.Expanding)
-                        frameLayout.addItem(horizSpacer, 1, 2)
-                        frameLayout.addItem(horizSpacer, 2, 2)
-
-                        # Setting the label for the date of the article.
-                        label_maker(dateVar, QtCore.Qt.AlignLeft, basicFont, 900, frameLayout, 3, 2)
-
-                        # setting the label for the body of the article
-                        label_maker(bodyVar, QtCore.Qt.AlignLeft, basicFont, 900, frameLayout, 4, 2)
+                    # Setting the label for the date of the article.
+                    label_maker(dateVar, QtCore.Qt.AlignLeft, basicFont, 900, frameLayout, 4, 2)
 
 
-
-                    except ValueError as e:
-                        horizSpacer = QSpacerItem(50, 50, QSizePolicy.Maximum, QSizePolicy.Expanding)
-                        frameLayout.addItem(horizSpacer, 1, 2)
-                        frameLayout.addItem(horizSpacer, 2, 2)
-
-                        # Setting the label for the date of the article.
-                        label_maker(dateVar, QtCore.Qt.AlignLeft, basicFont, 900, frameLayout, 3, 2)
-
-                        # setting the label for the body of the article
-                        label_maker(bodyVar, QtCore.Qt.AlignLeft, basicFont, 900, frameLayout, 4, 2)
+                    # setting the label for the body of the article
+                    label_maker(bodyVar, QtCore.Qt.AlignLeft, basicFont, 900, frameLayout, 5, 2)
 
 
-                    else:
-                        # TO-DO: Test if this is no longer necessary if unicode characters are fixed.
-                        if '\u2014' not in xNewsV85.listedImg[d]:
-                            data = response.read()
-
-                            artmap = QPixmap()
-                            artmap.loadFromData(data)
-                            artmap = QPixmap(artmap).scaled(700, 900, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
-                            self.image.setPixmap(artmap)
-                            self.image.setAlignment(QtCore.Qt.AlignCenter)
-                            self.image.adjustSize()
-                            frameLayout.addWidget(self.image, 2, 2)
-                            # Adding a space to further seperate the article image and body
-                            horizSpacer = QSpacerItem(50, 50, QSizePolicy.Maximum, QSizePolicy.Expanding)
-                            frameLayout.addItem(horizSpacer, 1, 2)
-                            frameLayout.addItem(horizSpacer, 3, 2)
-
-                            # Setting the label for the date of the article.
-                            label_maker(dateVar, QtCore.Qt.AlignLeft, basicFont, 900, frameLayout, 4, 2)
-
-
-                            # setting the label for the body of the article
-                            label_maker(bodyVar, QtCore.Qt.AlignLeft, basicFont, 900, frameLayout, 5, 2)
-
-
-                            # Adding verticle spacing
-                            vert_Spacer(scroll.layout, 250, 250)
-                        else:
-                            return
+                    # Adding verticle spacing
+                    vert_Spacer(scroll.layout, 250, 250)
+            
 
         # Building an iterator for working through items passed by the backend module
         global countKeeper, positionKeeper
@@ -1087,6 +1066,8 @@ class App(QMainWindow):
             iterator(countKeeper, positionKeeper)
 
         self.spacexTab.setLayout(self.spacexTab.layout)
+        self.commercialTab.setLayout(self.commercialTab.layout)
+        self.scienceTab.setLayout(self.scienceTab.layout)
 
         #======================================================================================
         # The Hubble Views tab, which shows the shot of the weeks from the Hubble
@@ -1359,7 +1340,8 @@ class App(QMainWindow):
 
             # Building the inner frame
             frameBuilder(frameLayout, 0, 0, 200, True)
-            self.frame.setMinimumHeight(500)     # setting maximum height
+            self.frame.setMinimumHeight(500)     # setting minimum height
+            self.frame.setMaximumWidth(400)
             #self.frame.setAlignment(QtCore.Qt.AlignCenter)
             # building the image object for the portrait
             self.image = QLabel(self)
@@ -1375,6 +1357,7 @@ class App(QMainWindow):
             self.image.setPixmap(artmap)
             self.image.setAlignment(QtCore.Qt.AlignCenter)
             self.image.adjustSize()
+            self.image.setMargin(0)
             frameLayout.addWidget(self.image, 1, 0)
 
             # Displaying the expidition patch with each bio
@@ -1388,8 +1371,9 @@ class App(QMainWindow):
             frameLayout.addWidget(self.expeditionLogo, 0, 1)
             # the header that contains the astronaut's name
             headerBuild(issPortal.crewName[crewVar], 0, 0, frameLayout, 70)
-            self.label.setMinimumHeight(200)
-            self.label.setMargin(0)
+            self.header.setFont(smallerHeader)
+            self.header.setMinimumHeight(50)
+            self.header.setMargin(0)
             #vert_Spacer(frameLayout, 70, 20)
             return
 
