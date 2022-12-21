@@ -8,7 +8,7 @@
    * Written By: Tom Mullins
    * Version: 0.85
    * Date Created:  10/13/17
-   * Date Modified: 10/05/22
+   * Date Modified: 11/08/22
 """
 """
    * Changelog:
@@ -253,7 +253,7 @@ class App(QMainWindow):
 
             # Adding a section in the config.ini for storing update options.
             themeConfig.add_section('Updates')
-            themeConfig.set('Updates', 'key1', 'Unstable')
+            themeConfig.set('Updates', 'key1', 'Stable')
             versionSelected = themeConfig.get('Updates', 'key1')
 
             with open(os.path.expanduser("~/.AstroNinja/config.ini"), 'w') as f:
@@ -352,7 +352,7 @@ class App(QMainWindow):
             yield process4.crawl(scheduleSpider.Schedulespider)
             process5 = CrawlerRunner({'ITEM_PIPELINES': {'xNewsV85.HubbleCollectorPipeline': 2000}})
             yield process5.crawl(hubbleSpider.HubblespiderSpider)
-            process6 = CrawlerRunner({'ITEM_PIPELINES': {'xNewsV85.ItemCollectorPipeline': 2000}})
+            process6 = CrawlerRunner({'ITEM_PIPELINES': {'xNewsV85.SpaceComPipeline': 2000}})
             yield process6.crawl(MoreNews.MorenewsSpider)
             process7 = CrawlerRunner({'ITEM_PIPELINES': {'spaceXlaunch.MoreCollectorPipeline': 2000}})
             yield process7.crawl(youtuber.YoutuberSpider)
@@ -698,7 +698,7 @@ class App(QMainWindow):
         spaceXlaunch.liftOff()
         # Building the SpaceX Lens object
 
-        itemPosition = 3
+        itemPosition = 2
 
         if spaceXlaunch.onlyLink != "" :
 
@@ -919,7 +919,7 @@ class App(QMainWindow):
         self.scienceTab.layout = QGridLayout()
 
         self.spacexTab.layout.addWidget(self.newstabs, 0, 0)
-        newsRun = xNewsV85.intestellar_News(sortingSelected)
+        newsRun = xNewsV85.intestellar_News(sortingSelected, xNewsV85.spiderLoot)
 
         # Building the scroll bar for the schedule. scrollBuilder() added V.75
         scrollBuilder(self.commercialTab.layout, 0, 0)
@@ -930,6 +930,7 @@ class App(QMainWindow):
         # c is the position of the item in the gui.
         # d is the position of the item in imageList
         # e is the position of the item in listedDate
+        # tab sets which tab the articles should appear in.
         def newsListBuilder(a, b, c, d, e):
 
             # Removing unwanted articles from space.com
@@ -1062,6 +1063,26 @@ class App(QMainWindow):
             return
 
         # Build the news list until we reach the end of the data
+        while countKeeper != len(xNewsV85.listedTitle):
+            iterator(countKeeper, positionKeeper)
+
+
+        #======================================================================================
+        # Building the second tab for the News section.
+        # This will contain the science news from space.com
+        #======================================================================================
+
+        # Running the backend function that processes the articles scraped with Scrapy.
+        # Processing space.com articles this time.
+        newsRun = xNewsV85.intestellar_News(sortingSelected, xNewsV85.spaceCom)
+
+        scrollBuilder(self.scienceTab.layout, 0, 0)
+
+        # Resetting the tallying variables.
+        countKeeper = 0
+        positionKeeper = 0
+
+        # Iterating through the lists of articles.
         while countKeeper != len(xNewsV85.listedTitle):
             iterator(countKeeper, positionKeeper)
 
@@ -1276,7 +1297,7 @@ class App(QMainWindow):
         frameBuilder(scroll.layout, 2, 1, 750, False )
         self.frame.setMaximumHeight(300)
         # the header
-        crewHead = "Current Expedition Crew                                                         Expedition 68"
+        crewHead = "Current Expedition Crew"
         #self.resLabel = QLabel("Current ISS Residents\n\nExpedition 62", self)
         headerBuild(crewHead, 1, 1, frameLayout, 70)
 
