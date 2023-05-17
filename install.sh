@@ -3,7 +3,7 @@
 # A simple Bash shell script that installs packages depended on by AstroNinja
 # Created by: Tom Mullins
 # Created: 10/01/2018
-# Modified: 07/25/2021
+# Modified: 05/10/2023
 
 
 # Testing for addition of an option to install on Fedora
@@ -16,8 +16,8 @@ if [ -f /etc/os-release ]; then
 
 #echo $OS
 
-# If the user is running Linux Mint
-if [ "$OS" = "Fedora" ] ; then
+# If the user is running Fedora
+if [ "$OS" = "Fedora Linux" ] ; then
   # First, we need to install the proper python 3 Libraries
   sudo dnf install -y python3-pip python3-qt5 python3-dateutil  python3-qt5-webengine python3-setuptools
 
@@ -39,10 +39,11 @@ if [ "$OS" = "Fedora" ] ; then
 
 else
   # First, we need to install the proper python 3 Libraries
-  sudo apt-get install -y python3-pip python3-pyqt5 python3-dateutil python3-tk python3-pyqt5.qtwebengine python3-setuptools
+  sudo apt-get install -y python3-pip python3-pyqt5 python3-dateutil python3-pyqt5.qtwebengine python3-setuptools python3-matplotlib python3-lxml python3-scrapy
 
   # Next we install the libaries installed by pip
-  python3 -m pip install matplotlib lxml scrapy
+  # Commenting out because Ubuntu 23.04 changes the way python packages have to be installed.
+  #python3 -m pip install matplotlib lxml scrapy
 
   # removes the folder, then copies the files to a . folder.
   rm -rf /home/$USER/.AstroNinja
@@ -65,7 +66,7 @@ fi
       # Removing an uneeded package that causes formatting errors in Linux Mint
       sudo apt-get remove qt5ct ;
   fi
-  
+
 
 
 

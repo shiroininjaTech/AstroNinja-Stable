@@ -8,7 +8,7 @@
    * Written By: Tom Mullins
    * Version: 0.85
    * Date Created:  10/13/17
-   * Date Modified: 4/08/23
+   * Date Modified: 5/13/23
 """
 """
    * Changelog:
@@ -64,9 +64,11 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import QUrl
 import astroGraphV85
+import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure
+plt.switch_backend("qt5agg")    #Switches the backend for matplotlib. This is necessary in Ubuntu 23.04
+
 import numpy as np
 from configparser import ConfigParser
 import astroThemesV85
@@ -679,7 +681,7 @@ class App(QMainWindow):
         frameBuilder(scroll.layout, 0, 1, 750, False)
         # Running the function that uses the backend module that scrapes the data needed
         # to display the next launch. Also builds the label object
-        headerBuild("Next Launch\n", 0, 1, frameLayout, 50)
+        headerBuild("Next Launch", 0, 1, frameLayout, 60)
         self.header.setAlignment(QtCore.Qt.AlignLeft)
 
         get_recent()

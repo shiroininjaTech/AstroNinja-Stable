@@ -8,7 +8,7 @@
    * Written By: Tom Mullins
    * Version: 0.85
    * Date Created: 01/11/18
-   * Date Modified: 3/28/23
+   * Date Modified: 5/5/23
 """
 
 import AstroNinjaMain
@@ -134,13 +134,13 @@ def tally_ho(x, y):
 
 
         elif 'Late' in launchDate:
-            notLate = launchDate[5:]
+            notLate = launchDate[6:]
             dateChange = parser.parse(notLate)
             changedateStr = str(dateChange)
 
 
         elif 'Mid' in launchDate and 'Mid-2023' not in astroNinjaV85.scheduleList[x]:
-            noMids = launchDate[4:]
+            noMids = launchDate[5:]
             dateChange = parser.parse(noMids)
             changedateStr = str(dateChange)
         
@@ -218,6 +218,7 @@ def tally_ho(x, y):
 
     # Iterate over scheduleList until finished
     while x != 60 and y != 67:
+
 
         # checking for any of the vague launch dates that cause breakage.
         if any(word in astroNinjaV85.scheduleList[x] for word in brokenDates) :
