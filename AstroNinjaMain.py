@@ -8,7 +8,7 @@
    * Written By: Tom Mullins
    * Version: 0.85
    * Date Created:  10/13/17
-   * Date Modified: 5/13/23
+   * Date Modified: 6/12/23
 """
 """
    * Changelog:
@@ -50,13 +50,13 @@
 
 """
 
-import re
-import time, os
+#import re
+import os
 from os.path import expanduser
 
 from datetime import date
-import calendar
-from dateutil import parser
+#import calendar
+#from dateutil import parser
 import sys
 import PyQt5
 from PyQt5 import QtCore
@@ -64,7 +64,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import QUrl
 import astroGraphV85
-import matplotlib
+#import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 plt.switch_backend("qt5agg")    #Switches the backend for matplotlib. This is necessary in Ubuntu 23.04
@@ -75,13 +75,13 @@ import astroThemesV85
 import urllib.request, urllib.parse
 import astroNinjaV85
 from PyQt5 import QtWebEngineWidgets
-from PyQt5 import QtWebEngineCore
-from PyQt5.QtWebEngineWidgets import QWebEngineSettings
+#from PyQt5 import QtWebEngineCore
+#from PyQt5.QtWebEngineWidgets import QWebEngineSettings
 import spaceXlaunch
 import xNewsV85
 import issPortal
-import scrapy
-from scrapy.crawler import CrawlerProcess
+#import scrapy
+#rom scrapy.crawler import CrawlerProcess
 from astro_spider.astro_spider.spiders import launchHistory
 from twisted.internet import reactor, defer
 from scrapy.crawler import CrawlerRunner
@@ -1195,7 +1195,7 @@ class App(QMainWindow):
         scrollBuilder(self.issTab.layout, 0, 0)
 
         self.issView = QtWebEngineWidgets.QWebEngineView()     # creating the webengine object
-        self.issView.setUrl(QUrl("https://www.youtube.com/embed/itdpuGHAcpg"))         # setting the URL to the one scraped by testFlight()
+        self.issView.setUrl(QUrl("https://www.youtube.com/embed/KG6SL6Mf7ak"))         # setting the URL to the one scraped by testFlight()
         self.issView.setMinimumWidth(900)
         self.issView.setMaximumHeight(700)
         # Building the SpaceX Lens object
