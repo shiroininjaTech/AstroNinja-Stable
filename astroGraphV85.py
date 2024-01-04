@@ -41,8 +41,7 @@ class ItemCollectorPipeline(object):
 def tally_ho(x, y):
 
     # tally_ho uses functions from astroNinja to tally the launch counts.
-    astroNinjaV85.getSchedule()
-    print(astroNinjaV85.scheduleList) 
+    astroNinjaV85.getSchedule() 
     #print(astroNinja.launchHead2)
     # The variables that keep count of the agency Tallies
     global spaceXCount
