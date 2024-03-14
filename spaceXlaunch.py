@@ -49,14 +49,21 @@ def liftOff():
 
 
     # getting the launch url using a youtube searching library, and then parsing the results to the first video result's link.
+    
     launchSearch = VideosSearch(missionTitle[0], limit = 1)
-    resultDict = launchSearch.result()['result'][0]  # Getting the first dictionary from the main dictionary.
 
-    result2  = (resultDict['link']).replace("watch?v=", 'embed/')+ '?si=XPF4U5XII6S2xNTz' # Turning the video link into an embed link.
+    if len(launchSearch.result()['result']) == 0 :
+        return     
+    
+    else:
 
-    onlyLink = result2
+        resultDict = launchSearch.result()['result'][0]  # Getting the first dictionary from the main dictionary.
+        print(resultDict)
+        result2  = (resultDict['link']).replace("watch?v=", 'embed/')+ '?si=XPF4U5XII6S2xNTz' # Turning the video link into an embed link.
+
+        onlyLink = result2
 
 
 
-    return
+        return
 
