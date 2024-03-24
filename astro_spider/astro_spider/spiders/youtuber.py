@@ -25,13 +25,13 @@ class YoutuberSpider(scrapy.Spider):
 
     def parse_launch(self, response):
 
-        missionName = response.xpath('//div[contains(@class, "row header")]//text()').extract()[1]
+        missionName = response.xpath('//div[contains(@class, "row header")]//text()').extract()[1] + 'launch'
         youtubeSearch = ("https://www.youtube.com/results?search_query=%s" % missionName).replace(" ", "+")  # Combines the youtube search URL and the first mission name.
 
         
         videos = {
             'youtubeUrl': youtubeSearch,
-            'mission' : missionName,
+            'mission' : missionName.replace("launch", ""),
         }
 
         
